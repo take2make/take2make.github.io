@@ -225,10 +225,13 @@
     #stars{display:none}
   }
   .hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:56px;align-items:center}
-  .photo-frame{position:relative;width:100%;max-width:400px;margin-left:auto}
-  .photo-frame img{width:100%;display:block;border-radius:12px;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--line-strong);box-shadow:var(--shadow);position:relative;z-index:2}
-  .photo-frame::before{content:"";position:absolute;right:-16px;bottom:-16px;width:62%;height:62%;border-radius:14px;background:linear-gradient(135deg,var(--gold),transparent 70%);opacity:.30;z-index:1}
-  .photo-frame::after{content:"";position:absolute;left:-14px;top:-14px;width:46%;height:46%;border-radius:14px;border:1.5px solid var(--teal);opacity:.55;z-index:1}
+  .photo-frame{
+    position:relative;width:100%;max-width:400px;margin-left:auto;
+    padding:1px;border-radius:14px;
+    background:linear-gradient(150deg, rgba(231,176,90,.60), rgba(116,201,191,.40) 55%, rgba(255,255,255,.06));
+    box-shadow:0 30px 70px -28px rgba(0,0,0,.9), 0 0 80px -22px rgba(231,176,90,.28);
+  }
+  .photo-frame img{width:100%;display:block;border-radius:13px;aspect-ratio:3/4;object-fit:cover}
   .photo-tag{position:absolute;left:14px;bottom:14px;z-index:3;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(10,13,20,.55);backdrop-filter:blur(4px);padding:6px 11px;border-radius:999px}
   @media (max-width:880px){
     .hero-grid{grid-template-columns:1fr;gap:38px}
