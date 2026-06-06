@@ -224,6 +224,16 @@
     html{scroll-behavior:auto}
     #stars{display:none}
   }
+  .hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:56px;align-items:center}
+  .photo-frame{position:relative;width:100%;max-width:400px;margin-left:auto}
+  .photo-frame img{width:100%;display:block;border-radius:12px;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--line-strong);box-shadow:var(--shadow);position:relative;z-index:2}
+  .photo-frame::before{content:"";position:absolute;right:-16px;bottom:-16px;width:62%;height:62%;border-radius:14px;background:linear-gradient(135deg,var(--gold),transparent 70%);opacity:.30;z-index:1}
+  .photo-frame::after{content:"";position:absolute;left:-14px;top:-14px;width:46%;height:46%;border-radius:14px;border:1.5px solid var(--teal);opacity:.55;z-index:1}
+  .photo-tag{position:absolute;left:14px;bottom:14px;z-index:3;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(10,13,20,.55);backdrop-filter:blur(4px);padding:6px 11px;border-radius:999px}
+  @media (max-width:880px){
+    .hero-grid{grid-template-columns:1fr;gap:38px}
+    .photo-frame{max-width:300px;margin:0 auto}
+  }
 </style>
 </head>
 <body>
@@ -246,35 +256,45 @@
 
 <main id="top">
 <section class="hero wrap">
-  <div class="slogan reveal">Take To Make</div>
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="slogan reveal">Take To Make</div>
+      <h1 class="reveal">Aleksei <em>Liutykh</em></h1>
 
-  <h1 class="reveal">Aleksei <em>Liutykh</em></h1>
+      <!-- FREELANCE version — currently shown -->
+      <p class="lede reveal">
+        Software engineer by trade, physicist by passion. <strong>Five years</strong> building and shipping
+        production mobile apps end to end, from design and development to App Store and Google Play release,
+        payments, and maintenance, with the analytical rigor of a scientific mind behind every decision.
+      </p>
 
-  <!-- FREELANCE version — currently shown -->
-  <p class="lede reveal">
-    Software engineer by trade, physicist by passion. <strong>Five years</strong> building and shipping
-    production mobile apps end to end, from design and development to App Store and Google Play release,
-    payments, and maintenance, with the analytical rigor of a scientific mind behind every decision.
-  </p>
-  
-  <!-- SCIENCE version — hidden for now; swap when applying for research
-  <p class="lede reveal">
-    A physicist drawn to the meeting point of theory, experiment, and cosmology, backed by five years of
-    professional software engineering. I build systems that work, and I want to put that rigor toward
-    understanding how the Universe is built.
-  </p>
-  -->
+      <!-- SCIENCE version — hidden for now; swap when applying for research
+      <p class="lede reveal">
+        A physicist drawn to the meeting point of theory, experiment, and cosmology, backed by five years of
+        professional software engineering. I build systems that work, and I want to put that rigor toward
+        understanding how the Universe is built.
+      </p>
+      -->
 
-  <div class="kicker reveal" style="margin-top:22px">
-    <span class="dot"></span> Software Engineer
-    <span style="color:var(--faint)">·</span> Cosmology &amp; Theoretical Physics
-    <span style="color:var(--faint)">·</span> Paris, FR
-  </div>
+      <div class="kicker reveal" style="margin-top:22px">
+        <span class="dot"></span> Software Engineer
+        <span style="color:var(--faint)">·</span> Cosmology &amp; Theoretical Physics
+        <span style="color:var(--faint)">·</span> Paris, FR
+      </div>
 
-  <div class="hero-cta reveal">
-    <a href="#research" class="btn primary">Explore research →</a>
-    <a href="#engineering" class="btn">Engineering work</a>
-    <a href="mailto:lutixalex1998@gmail.com" class="btn">Get in touch</a>
+      <div class="hero-cta reveal">
+        <a href="#research" class="btn primary">Explore research →</a>
+        <a href="#engineering" class="btn">Engineering work</a>
+        <a href="mailto:lutixalex1998@gmail.com" class="btn">Get in touch</a>
+      </div>
+    </div>
+
+    <div class="hero-photo reveal">
+      <div class="photo-frame">
+        <img src="profile.jpg" alt="Aleksei Liutykh" />
+        <span class="photo-tag">Chamonix · FR</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -306,7 +326,10 @@
         <span class="chip">Flutter</span>
         <span class="chip">Dart</span>
         <span class="chip">Swift</span>
+        <span class="chip">SwiftUI</span>
+        <span class="chip">UIKit</span>
         <span class="chip">Firebase</span>
+        <span class="chip">Supabase</span>
         <span class="chip">Payments &amp; subscriptions</span>
         <span class="chip">CI/CD</span>
         <span class="chip">Frontend</span>
@@ -317,7 +340,7 @@
 
   <div class="stats reveal">
     <div class="stat"><div class="n">5+</div><div class="l">Years building software</div></div>
-    <div class="stat"><div class="n">10k+</div><div class="l">Users reached</div></div>
+    <div class="stat"><div class="n">100k+</div><div class="l">Users reached</div></div>
     <div class="stat"><div class="n">1</div><div class="l">Peer-reviewed paper</div></div>
     <div class="stat"><div class="n">10+</div><div class="l">Apps in production</div></div>
   </div>
