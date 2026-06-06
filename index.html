@@ -1,1 +1,623 @@
-Hello World
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aleksei Liutykh — Physics &amp; Software</title>
+<meta name="description" content="Aleksei Liutykh — Master's student in fundamental physics (NPAC) and independent Flutter developer. Theoretical modeling, numerical simulation, and five years of shipping production mobile apps." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0d14;
+    --bg-soft:#0e121c;
+    --panel:#111726;
+    --ink:#ece9df;
+    --ink-dim:#b9bccb;
+    --muted:#7f879b;
+    --faint:#4d5468;
+    --line:rgba(236,233,223,.10);
+    --line-strong:rgba(236,233,223,.18);
+    --gold:#e7b05a;        /* physics / primary accent */
+    --gold-deep:#c98f37;
+    --teal:#74c9bf;        /* engineering accent */
+    --teal-deep:#4ba79c;
+    --shadow:0 30px 80px -40px rgba(0,0,0,.8);
+    --maxw:1120px;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Hanken Grotesk",system-ui,sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--gold);color:#0a0d14}
+  a{color:inherit;text-decoration:none}
+
+  /* atmosphere */
+  #stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  .bg-grad{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(1200px 700px at 78% -8%, rgba(231,176,90,.10), transparent 60%),
+      radial-gradient(1000px 800px at 8% 105%, rgba(116,201,191,.08), transparent 60%),
+      linear-gradient(180deg,#090c12 0%, #0a0d14 40%, #0a0e16 100%);
+  }
+  .grid-overlay{
+    position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:120px 120px;
+    mask-image:radial-gradient(circle at 50% 30%, black, transparent 85%);
+    -webkit-mask-image:radial-gradient(circle at 50% 30%, black, transparent 85%);
+  }
+
+  .wrap{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+  /* nav */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(10px);
+    background:linear-gradient(180deg, rgba(10,13,20,.85), rgba(10,13,20,.45) 70%, transparent);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s, background .3s;
+  }
+  header.nav.scrolled{border-bottom:1px solid var(--line);background:rgba(10,13,20,.9)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .brand{font-family:"JetBrains Mono",monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+  .brand b{color:var(--gold);font-weight:600}
+  nav.links{display:flex;gap:30px}
+  nav.links a{
+    font-family:"JetBrains Mono",monospace;font-size:12.5px;letter-spacing:.08em;
+    color:var(--muted);text-transform:uppercase;transition:color .2s;position:relative;
+  }
+  nav.links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--gold);transition:width .25s}
+  nav.links a:hover{color:var(--ink)}
+  nav.links a:hover::after{width:100%}
+  .menu-toggle{display:none}
+
+  /* hero */
+  .hero{padding:78px 0 64px;position:relative}
+  .kicker{
+    font-family:"JetBrains Mono",monospace;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--muted);display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+  }
+  .kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+  .hero h1{
+    font-family:"Fraunces",serif;font-weight:500;
+    font-size:clamp(3.4rem,9vw,7.4rem);line-height:.92;letter-spacing:-.02em;
+    margin:.32em 0 .28em;color:var(--ink);
+  }
+  .hero h1 em{font-style:italic;color:var(--gold);font-weight:400}
+  .lede{max-width:62ch;font-size:clamp(1.05rem,1.7vw,1.32rem);color:var(--ink-dim);line-height:1.62}
+  .lede strong{color:var(--ink);font-weight:600}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+  .btn{
+    font-family:"JetBrains Mono",monospace;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;
+    padding:13px 22px;border-radius:2px;border:1px solid var(--line-strong);color:var(--ink);
+    transition:.22s;display:inline-flex;align-items:center;gap:9px;
+  }
+  .btn.primary{background:var(--gold);color:#0a0d14;border-color:var(--gold);font-weight:600}
+  .btn.primary:hover{background:#f1c074;transform:translateY(-2px)}
+  .btn:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+  .btn.primary:hover{color:#0a0d14}
+
+  /* sections */
+  section{padding:74px 0;position:relative;scroll-margin-top:88px}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:42px;flex-wrap:wrap}
+  .sec-idx{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--gold);letter-spacing:.1em}
+  .sec-title{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(1.9rem,4vw,2.9rem);letter-spacing:-.01em;line-height:1.05}
+  .sec-note{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--faint);letter-spacing:.06em;margin-left:auto;text-transform:uppercase}
+  .rule{height:1px;background:var(--line);width:100%;margin-bottom:42px}
+
+  /* two domains */
+  .domains{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .domain{
+    border:1px solid var(--line);border-radius:6px;padding:34px 32px;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent);
+    position:relative;overflow:hidden;transition:.3s;
+  }
+  .domain::before{content:"";position:absolute;left:0;top:0;height:100%;width:3px;background:var(--accent)}
+  .domain.phys{--accent:var(--gold)}
+  .domain.eng{--accent:var(--teal)}
+  .domain:hover{transform:translateY(-4px);border-color:var(--line-strong);box-shadow:var(--shadow)}
+  .domain .tag{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+  .domain h3{font-family:"Fraunces",serif;font-weight:500;font-size:1.7rem;margin:.5em 0 .45em;line-height:1.1}
+  .domain p{color:var(--ink-dim);font-size:1rem;margin:0 0 22px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.04em;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:999px}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:24px}
+  .stat{background:var(--bg-soft);padding:28px 24px}
+  .stat .n{font-family:"Fraunces",serif;font-weight:500;font-size:2.5rem;line-height:1;color:var(--gold);letter-spacing:-.02em}
+  .stat .l{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+
+  /* timeline / entries */
+  .entry{display:grid;grid-template-columns:200px 1fr;gap:32px;padding:30px 0;border-top:1px solid var(--line)}
+  .entry:first-of-type{border-top:none}
+  .entry .when{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--muted);letter-spacing:.04em;padding-top:6px}
+  .entry .when .place{display:block;color:var(--faint);margin-top:6px;font-size:11.5px;line-height:1.5}
+  .entry h4{font-family:"Fraunces",serif;font-weight:500;font-size:1.4rem;margin:0 0 4px;line-height:1.18}
+  .entry .role{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:14px}
+  .entry .role.gold{color:var(--gold)}
+  .entry ul{margin:0;padding:0;list-style:none}
+  .entry li{position:relative;padding-left:20px;margin-bottom:9px;color:var(--ink-dim);font-size:.98rem}
+  .entry li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--gold)}
+  .entry.eng li::before{background:var(--teal)}
+  .metrics{display:flex;gap:24px;flex-wrap:wrap;margin-top:14px}
+  .metric{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted)}
+  .metric b{color:var(--ink);font-weight:600;font-size:1.05rem;display:block;font-family:"Fraunces",serif}
+  .ext{color:var(--gold);font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.04em;border-bottom:1px solid transparent;transition:.2s}
+  .entry.eng .ext{color:var(--teal)}
+  .ext:hover{border-color:currentColor}
+
+  /* publication callout */
+  .paper{
+    margin-top:36px;border:1px solid var(--line-strong);border-radius:6px;padding:26px 30px;
+    background:linear-gradient(180deg,rgba(231,176,90,.06),transparent);
+    display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;
+  }
+  .paper .pl{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .paper .pt{font-family:"Fraunces",serif;font-style:italic;font-size:1.3rem;line-height:1.2}
+  .paper .pm{font-size:.92rem;color:var(--muted);margin-top:6px}
+
+  /* skills */
+  .skills{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+  .skillcol h5{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .skillcol .chips{gap:8px}
+
+  /* education + languages */
+  .edu .entry{grid-template-columns:200px 1fr}
+  .langs{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .lang{border:1px solid var(--line);border-radius:6px;padding:18px 24px;flex:1;min-width:170px}
+  .lang .ln{font-family:"Fraunces",serif;font-size:1.3rem}
+  .lang .lv{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted);letter-spacing:.06em;margin-top:6px}
+
+  /* contact */
+  .contact-card{
+    border:1px solid var(--line-strong);border-radius:8px;padding:48px;
+    background:linear-gradient(135deg,rgba(231,176,90,.07),rgba(116,201,191,.05));
+    text-align:center;
+  }
+  .contact-card h2{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(2rem,5vw,3.2rem);margin:0 0 16px;line-height:1.05}
+  .contact-card p{color:var(--ink-dim);max-width:52ch;margin:0 auto 30px}
+  .contact-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;margin-top:20px}
+  .foot-inner{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+    font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.06em;color:var(--faint);text-transform:uppercase}
+
+  /* reveal animation */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  @media (max-width:860px){
+    .domains{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .skills{grid-template-columns:1fr}
+    .entry{grid-template-columns:1fr;gap:10px}
+    .entry .when{padding-top:0}
+    nav.links{display:none}
+    .grid-overlay{background-size:80px 80px}
+    .contact-card{padding:34px 24px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+    #stars{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="bg-grad"></div>
+<canvas id="stars"></canvas>
+<div class="grid-overlay"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand">A·L<b>/</b>Liutykh</a>
+    <nav class="links">
+      <a href="#research">Research</a>
+      <a href="#engineering">Engineering</a>
+      <a href="#skills">Skills</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero wrap">
+  <div class="kicker reveal">
+    <span class="dot"></span> M2 · NPAC &nbsp;—&nbsp; Nuclei, Particles, Astroparticles &amp; Cosmology
+    <span style="color:var(--faint)">·</span> Flutter Developer
+    <span style="color:var(--faint)">·</span> Paris, FR
+  </div>
+  <h1 class="reveal">Aleksei <em>Liutykh</em></h1>
+  <p class="lede reveal">
+    I move between two disciplines that reward the same instincts — precision, structure,
+    and the patience to get the model right. As a master's student in <strong>NPAC</strong> I work on the theory
+    of fundamental interactions and the large-scale structure of the Universe; as an independent
+    engineer I've spent <strong>five years</strong> designing, building, and shipping production mobile applications.
+  </p>
+  <div class="hero-cta reveal">
+    <a href="#research" class="btn primary">Explore research →</a>
+    <a href="#engineering" class="btn">Engineering work</a>
+    <a href="mailto:lutixalex1998@gmail.com" class="btn">Get in touch</a>
+  </div>
+</section>
+
+<!-- TWO DOMAINS -->
+<section class="wrap" id="about">
+  <div class="domains">
+    <div class="domain phys reveal">
+      <div class="tag">Theory &amp; Research</div>
+      <h3>The physics that explains the universe</h3>
+      <p>Quantum field theory, particle physics, and cosmology. I aim to pursue research that
+         combines analytical modeling with numerical simulation — from critical phenomena and
+         renormalization to the standard candles that measure the cosmos.</p>
+      <div class="chips">
+        <span class="chip">Quantum field theory</span>
+        <span class="chip">Statistical physics</span>
+        <span class="chip">Numerical methods</span>
+        <span class="chip">General relativity</span>
+        <span class="chip">Group theory</span>
+      </div>
+    </div>
+    <div class="domain eng reveal">
+      <div class="tag">Software Engineering</div>
+      <h3>The software that ships and scales</h3>
+      <p>Five years of independent Flutter development — the full cycle from scoping and design to
+         App&nbsp;Store / Google&nbsp;Play release, monetization, and ongoing maintenance. Two of my own
+         apps are live in production today.</p>
+      <div class="chips">
+        <span class="chip">Flutter</span>
+        <span class="chip">Dart</span>
+        <span class="chip">Firebase</span>
+        <span class="chip">Payments &amp; subscriptions</span>
+        <span class="chip">CI/CD</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats reveal">
+    <div class="stat"><div class="n">5+</div><div class="l">Years building in Flutter</div></div>
+    <div class="stat"><div class="n">10k+</div><div class="l">Users reached</div></div>
+    <div class="stat"><div class="n">1</div><div class="l">Peer-reviewed paper</div></div>
+    <div class="stat"><div class="n">2</div><div class="l">Apps in production</div></div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section class="wrap" id="research">
+  <div class="sec-head reveal">
+    <span class="sec-idx">01</span>
+    <h2 class="sec-title">Research &amp; scientific computing</h2>
+    <span class="sec-note">Theory · simulation · data</span>
+  </div>
+
+  <div class="entry reveal">
+    <div class="when">Apr – Jul 2026
+      <span class="place">LPTHE — Laboratoire de Physique Théorique et Hautes Énergies, Paris</span>
+    </div>
+    <div>
+      <h4>Perturbative renormalization of the φ⁴ model</h4>
+      <div class="role gold">Theoretical research internship</div>
+      <ul>
+        <li>Studied critical phenomena and phase transitions in classical and quantum systems.</li>
+        <li>Computed critical exponents analytically using renormalization techniques in quantum field theory.</li>
+        <li>Examined the Ising model and its associated effective field theory (the φ⁴ model).</li>
+        <li>Compared analytical predictions against numerical and experimental results.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="entry reveal">
+    <div class="when">2019 – 2022
+      <span class="place">Lomonosov Moscow State University</span>
+    </div>
+    <div>
+      <h4>Type Ia supernovae as cosmological standard candles</h4>
+      <div class="role gold">Astrophysics research project</div>
+      <ul>
+        <li>Worked within a group studying Type Ia supernovae as standard candles for cosmological distance measurements.</li>
+        <li>Developed Python and C/C++ modules for hydrodynamical simulation codes — result visualization and computation of temperature, density, and mass.</li>
+        <li>Investigated the Hubble-tension problem and implemented related constraints in the simulations.</li>
+      </ul>
+      <div class="paper" style="margin-top:18px">
+        <div>
+          <div class="pl">Co-authored publication</div>
+          <div class="pt">Light Curves of Type Ia Supernovae</div>
+          <div class="pm">DOI 10.1134/S1063773721010060 · Astronomy Letters</div>
+        </div>
+        <a class="btn" href="https://doi.org/10.1134/S1063773721010060" target="_blank" rel="noopener">Read the paper →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry reveal">
+    <div class="when">2021 – present
+      <span class="place">Independent · personal projects</span>
+    </div>
+    <div>
+      <h4>Numerical methods &amp; scientific computing</h4>
+      <div class="role gold">Self-directed</div>
+      <ul>
+        <li>Simulated wave-packet dynamics for the Schrödinger equation (Crank–Nicolson and leapfrog schemes).</li>
+        <li>Implemented numerical schemes for partial differential equations — finite differences, implicit and explicit methods.</li>
+        <li>Validated models through conservation laws (energy, norm) and comparison with analytical solutions.</li>
+        <li>Built 3D visualization tools using spatial geometry and quaternions (C/C++, Python).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="entry reveal">
+    <div class="when">2018 – 2019
+      <span class="place">Russia</span>
+    </div>
+    <div>
+      <h4>Observational astronomy internships</h4>
+      <div class="role gold">Galaxy &amp; stellar evolution · special astronomy practice</div>
+      <ul>
+        <li>Advanced coursework on galaxy and star formation, with group analysis and presentations.</li>
+        <li>Hands-on training with telescopes and instruments — acquisition, processing, and analysis of astronomical data.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ENGINEERING -->
+<section class="wrap" id="engineering">
+  <div class="sec-head reveal">
+    <span class="sec-idx">02</span>
+    <h2 class="sec-title">Software engineering</h2>
+    <span class="sec-note">Flutter · 5 years · independent</span>
+  </div>
+
+  <div class="entry eng reveal">
+    <div class="when">2025 – present
+      <span class="place">Own product · Paris</span>
+    </div>
+    <div>
+      <h4>Parle — Learn &amp; Speak French</h4>
+      <div class="role">Founder &amp; lead developer</div>
+      <ul>
+        <li>Designed, built, and commercially operate a mobile app for learning French — pedagogical content, testing, release, and performance tracking.</li>
+        <li>Monetized through recurring subscriptions (in-app purchases), with planned updates and continuous improvement.</li>
+      </ul>
+      <div class="metrics">
+        <span class="metric"><b>~1,500</b> new users / month</span>
+        <span class="metric"><b>120</b> active subscriptions</span>
+        <span class="metric" style="align-self:center"><a class="ext" href="https://parleapp.fr" target="_blank" rel="noopener">parleapp.fr ↗</a></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry eng reveal">
+    <div class="when">2020 – 2023
+      <span class="place">Ed-tech startup · Paris</span>
+    </div>
+    <div>
+      <h4>Slai — language-learning startup</h4>
+      <div class="role">Lead developer · recognized innovative project (Passeport Talent)</div>
+      <ul>
+        <li>Launched in production on iOS and Android with a full subscription journey and regular releases.</li>
+        <li>Reused the resulting architecture and practices across my current independent work after the project pivoted.</li>
+      </ul>
+      <div class="metrics">
+        <span class="metric"><b>10,000+</b> users</span>
+        <span class="metric"><b>100+</b> paying subscribers</span>
+        <span class="metric" style="align-self:center"><a class="ext" href="https://slai.tech" target="_blank" rel="noopener">slai.tech ↗</a></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry eng reveal">
+    <div class="when">2023 – 2024
+      <span class="place">Opinov8 · client mission</span>
+    </div>
+    <div>
+      <h4>Senior Flutter Developer</h4>
+      <div class="role">Performance &amp; growth</div>
+      <ul>
+        <li>Cut load times by ~20% through improved cache management.</li>
+        <li>Built an in-app chat support module with measured gains in user satisfaction.</li>
+        <li>Optimized onboarding for a +5% retention improvement and implemented a reliable subscription/payment flow.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="entry eng reveal">
+    <div class="when">2022 – 2023
+      <span class="place">Moqod · client mission</span>
+    </div>
+    <div>
+      <h4>Flutter Developer</h4>
+      <div class="role">Reliability &amp; delivery</div>
+      <ul>
+        <li>Added an offline mode for key content so the app stays usable without a network.</li>
+        <li>Ran usage tracking and A/B tests to validate features before wide rollout.</li>
+        <li>Adapted layouts for tablet and phone, and automated the release pipeline (CI/CD) for frequent, reliable updates.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="wrap" id="skills">
+  <div class="sec-head reveal">
+    <span class="sec-idx">03</span>
+    <h2 class="sec-title">Skills &amp; toolkit</h2>
+    <span class="sec-note">Theory · implementation</span>
+  </div>
+  <div class="skills">
+    <div class="skillcol reveal">
+      <h5>Physics</h5>
+      <div class="chips">
+        <span class="chip">Quantum field theory</span>
+        <span class="chip">Quantum physics</span>
+        <span class="chip">Statistical physics</span>
+        <span class="chip">Classical field theory</span>
+        <span class="chip">Group theory</span>
+        <span class="chip">General relativity</span>
+        <span class="chip">Numerical methods</span>
+      </div>
+    </div>
+    <div class="skillcol reveal">
+      <h5>Engineering</h5>
+      <div class="chips">
+        <span class="chip">Flutter</span>
+        <span class="chip">Dart</span>
+        <span class="chip">Firebase</span>
+        <span class="chip">In-app payments</span>
+        <span class="chip">Subscriptions</span>
+        <span class="chip">App Store / Play release</span>
+        <span class="chip">A/B testing</span>
+        <span class="chip">Analytics</span>
+        <span class="chip">CI/CD</span>
+      </div>
+    </div>
+    <div class="skillcol reveal">
+      <h5>Programming &amp; methods</h5>
+      <div class="chips">
+        <span class="chip">Python</span>
+        <span class="chip">C / C++</span>
+        <span class="chip">Dart</span>
+        <span class="chip">Numerical modeling</span>
+        <span class="chip">Data analysis</span>
+        <span class="chip">3D visualization</span>
+        <span class="chip">Quaternions / geometry</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section class="wrap edu" id="education">
+  <div class="sec-head reveal">
+    <span class="sec-idx">04</span>
+    <h2 class="sec-title">Education</h2>
+  </div>
+  <div class="rule reveal"></div>
+  <div class="entry reveal">
+    <div class="when">2024 – 2026
+      <span class="place">NPAC · Paris</span>
+    </div>
+    <div>
+      <h4>Master's in fundamental physics — NPAC</h4>
+      <div class="role gold">Nuclei, Particles, Astroparticles &amp; Cosmology</div>
+      <ul>
+        <li>Coursework and projects in statistical physics, quantum mechanics, numerical methods, classical field theory, relativity, introductory quantum field theory, and nuclear &amp; particle physics.</li>
+        <li>Master 1 in Fundamental Physics and Applications completed at Sorbonne Université.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="entry reveal">
+    <div class="when">2017 – 2022
+      <span class="place">Lomonosov Moscow State University</span>
+    </div>
+    <div>
+      <h4>Specialist degree in physics (5-year program · master's equivalent)</h4>
+      <div class="role gold">Specialization in astronomy &amp; astrophysics</div>
+      <ul>
+        <li>Comprehensive training in fundamental physics — mechanics, electrodynamics, statistical physics, thermodynamics, and theoretical mechanics.</li>
+        <li>Diploma project on Type Ia supernovae combining physical modeling, numerical computation, and data analysis — leading to a scientific publication.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h5 style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:44px 0 4px">Languages</h5>
+  <div class="langs reveal">
+    <div class="lang"><div class="ln">French</div><div class="lv">B2 — TCF</div></div>
+    <div class="lang"><div class="ln">English</div><div class="lv">B2 — IELTS</div></div>
+    <div class="lang"><div class="ln">Russian</div><div class="lv">Native</div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="wrap" id="contact">
+  <div class="contact-card reveal">
+    <h2>Let's talk — research or build.</h2>
+    <p>Open to research opportunities in theoretical and computational physics, and to selected
+       freelance mobile-development work. The fastest way to reach me is email.</p>
+    <div class="contact-links">
+      <a class="btn primary" href="mailto:lutixalex1998@gmail.com">lutixalex1998@gmail.com</a>
+      <a class="btn" href="https://www.linkedin.com/in/aleksei-liutykh" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn" href="https://github.com/" target="_blank" rel="noopener" data-edit="github">GitHub ↗</a>
+    </div>
+    <p style="margin-top:22px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--faint);letter-spacing:.06em">
+      Paris, Île-de-France, France · +33 6 47 71 03 70
+    </p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© <span id="yr"></span> Aleksei Liutykh</span>
+    <span>Physics &amp; Software · Paris</span>
+    <span>Built &amp; maintained by hand</span>
+  </div>
+</footer>
+
+<script>
+  // year
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // nav shadow on scroll
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 24));
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, { threshold:.12, rootMargin:'0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach((el,i) => {
+    el.style.transitionDelay = (Math.min(i,6)*60) + 'ms';
+    io.observe(el);
+  });
+
+  // starfield
+  (function(){
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    const c = document.getElementById('stars'), x = c.getContext('2d');
+    let w, h, stars, dpr;
+    function init(){
+      dpr = Math.min(devicePixelRatio||1, 2);
+      w = c.width = innerWidth*dpr; h = c.height = innerHeight*dpr;
+      c.style.width = innerWidth+'px'; c.style.height = innerHeight+'px';
+      const count = Math.min(150, Math.floor(innerWidth*innerHeight/12000));
+      stars = Array.from({length:count}, () => ({
+        x: Math.random()*w, y: Math.random()*h,
+        r: (Math.random()*1.3+.3)*dpr,
+        a: Math.random(), tw: Math.random()*.02+.004,
+        gold: Math.random() < .12
+      }));
+    }
+    function draw(){
+      x.clearRect(0,0,w,h);
+      for (const s of stars){
+        s.a += s.tw; const alpha = .25 + Math.abs(Math.sin(s.a))*.6;
+        x.beginPath(); x.arc(s.x, s.y, s.r, 0, 6.283);
+        x.fillStyle = s.gold ? 'rgba(231,176,90,'+alpha+')' : 'rgba(236,233,223,'+alpha*.8+')';
+        x.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    init(); draw();
+    let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(init, 200); });
+  })();
+</script>
+</body>
+</html>
