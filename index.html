@@ -116,7 +116,7 @@
     white-space:nowrap;
   }
   .hero h1 em{font-style:italic;color:var(--gold);font-weight:400}
-  .lede{max-width:62ch;;font-size:clamp(1.05rem,1.7vw,1.32rem);color:var(--ink-dim);line-height:1.62}
+  .lede{max-width:65ch;;font-size:clamp(1.05rem,1.7vw,1.32rem);color:var(--ink-dim);line-height:1.62}
   .lede strong{color:var(--ink);font-weight:600}
   .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
   .btn{
@@ -234,10 +234,9 @@
     #stars{display:none}
   }
   .hero-grid{
-    display:grid;
-    grid-template-columns:1.12fr .88fr;
-    gap:56px;
-    align-items:start;   /* was center — this lifts the photo to the top */
+    grid-template-columns:1.6fr .8fr;  /* was ~1.12fr .88fr — text gets far more width */
+    gap:44px;
+    align-items:start;
   }
   .photo-frame{
     position:relative;width:100%;max-width:280px;margin:0 auto;
