@@ -226,7 +226,12 @@
     html{scroll-behavior:auto}
     #stars{display:none}
   }
-  .hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:56px;align-items:center}
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.12fr .88fr;
+    gap:56px;
+    align-items:start;   /* was center — this lifts the photo to the top */
+  }
   .photo-frame{
     position:relative;width:100%;max-width:280px;margin:0 auto;
     padding:2px;border-radius:50%;
