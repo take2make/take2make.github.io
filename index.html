@@ -292,15 +292,21 @@
   <style>
     .fp-card{padding:0;overflow:hidden}
     .fp-card::before{z-index:5}
-    .fp-shot-wrap{position:relative;display:flex;flex-direction:column;height:600px;border-radius:6px;overflow:hidden;background:#05070c}
+    .fp-shot-wrap{position:relative;height:600px;border-radius:6px;overflow:hidden;background:#05070c}
     .fp-blur{position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);
       object-fit:cover;filter:blur(40px) saturate(1.2) brightness(.5);transform:scale(1.1);z-index:0}
     /* stage that holds the phone shot; flex:1 so caption keeps its own room */
     .fp-shot-area{position:relative;z-index:1;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;padding:24px 24px 8px}
-    .fp-shot{max-height:100%;max-width:78%;width:auto;height:auto;border-radius:16px;
-      box-shadow:0 22px 55px rgba(0,0,0,.65),0 0 0 1px rgba(236,233,223,.06)}
+    .fp-shot{
+      position:relative; z-index:1;
+      display:block; margin:24px auto 0;
+      width:auto; height:auto;
+      max-width:78%; max-height:430px;   /* <- gives it a real cap */
+      border-radius:16px;
+      box-shadow:0 22px 55px rgba(0,0,0,.65),0 0 0 1px rgba(236,233,223,.06);
+    }
     /* caption: normal flow, never overflows */
-    .fp-cap{position:relative;z-index:2;flex:0 0 auto;padding:18px 26px 24px;
+    .fp-cap{position:absolute;left:0;right:0;bottom:0;padding:18px 26px 24px;
       background:linear-gradient(to top,rgba(5,7,12,.96),rgba(5,7,12,.82) 70%,rgba(5,7,12,0));margin-top:-46px}
     .fp-cap .fp-tag{color:var(--accent)}
     .fp-cap h3{font-family:"Fraunces",serif;font-weight:500;font-size:1.4rem;line-height:1.12;margin:7px 0 7px}
