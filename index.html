@@ -369,11 +369,11 @@
   .fp-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:14px;border-top:1px solid var(--line)}
   .fp-metric{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--muted)}
   .fp-metric b{color:var(--ink);font-family:"Fraunces",serif;font-size:1.02rem;font-weight:500}
-  .fp-controls{display:flex;align-items:center;gap:14px;margin-top:26px}
+  .fp-controls{display:grid;align-items:center;gap:14px;margin-top:16px;grid-template-columns: 44px 1fr 44px;}
   .fp-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line-strong);background:var(--bg-soft);color:var(--ink);font-size:17px;cursor:pointer;display:grid;place-items:center;transition:.2s}
   .fp-btn:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
   .fp-btn:disabled{opacity:.35;cursor:default;transform:none;border-color:var(--line);color:var(--muted)}
-  .fp-dots{display:flex;gap:9px;margin-left:6px}
+  .fp-dots{display:flex;gap:9px;margin-left:6px;justify-self: center;align-items:center;}
   .fp-dot{width:7px;height:7px;border-radius:50%;background:var(--faint);border:0;padding:0;cursor:pointer;transition:.25s}
   .fp-dot.active{background:var(--gold);box-shadow:0 0 10px var(--gold);transform:scale(1.25)}
   .fp-hint{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
@@ -655,14 +655,20 @@
       </div>
     </div>
     <div class="fp-controls">
-      <button class="fp-btn fp-prev" aria-label="Previous project">←</button>
-      <button class="fp-btn fp-next" aria-label="Next project">→</button>
-      <div class="fp-dots">
-        <button class="fp-dot active"></button><button class="fp-dot"></button>
-        <button class="fp-dot"></button><button class="fp-dot"></button>
+      <!--<button class="fp-btn fp-prev" aria-label="Previous project">←</button>
+      <button class="fp-btn fp-next" aria-label="Next project">→</button>-->
+     <button class="fp-btn fp-prev" aria-label="Previous project">←</button>
+      <div class="fp-dots" style="justify-self: center; display: flex; align-items: center;">
+        <button class="fp-dot active"></button>
+        <button class="fp-dot"></button>
+        <button class="fp-dot"></button>
+        <button class="fp-dot"></button>
+        <button class="fp-dot"></button>
+        <button class="fp-dot"></button>
       </div>
-      <div class="fp-prog"><span id="fpProg"></span></div>
-      <button class="fp-pause" id="fpPause">pause</button>
+      <button class="fp-btn fp-next" aria-label="Next project" style="justify-self: end;">→</button>
+      <!--<div class="fp-prog"><span id="fpProg"></span></div>-->
+      <!--<button class="fp-pause" id="fpPause">pause</button>-->
     </div>
   </section>
 
